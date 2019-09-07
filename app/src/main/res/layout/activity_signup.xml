@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    android:padding="20dp"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:background="@color/app_background"
+    tools:context=".activity.SignupActivity">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:src="@drawable/ic_add_image"
+        android:layout_gravity="center"
+        android:onClick="addImage"
+        android:tint="#FFF"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Image"
+        android:textColor="#fff"
+        android:textSize="15sp"
+        android:onClick="addImage"
+        android:layout_gravity="center"/>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="#F6F6F6">
+        <EditText
+            android:id="@+id/fullname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_user"
+            android:singleLine="true"
+            android:hint="Full Name"
+            android:backgroundTint="#F6F6F6"
+            android:drawableTint="#f6f6f6"
+            android:drawablePadding="10dp"
+            android:textColor="#f6f6f6"
+            android:imeOptions="actionNext"
+            android:inputType="textCapWords" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:textColorHint="#F6F6F6">
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_email"
+            android:singleLine="true"
+            android:hint="Email"
+            android:backgroundTint="#F6F6F6"
+            android:drawableTint="#f6f6f6"
+            android:textColor="#f6f6f6"
+            android:drawablePadding="10dp"
+            android:imeOptions="actionNext"
+            android:inputType="textEmailAddress" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:textColorHint="#F6F6F6">
+        <EditText
+            android:id="@+id/phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_phone"
+            android:singleLine="true"
+            android:hint="Phone"
+            android:backgroundTint="#F6F6F6"
+            android:drawableTint="#f6f6f6"
+            android:textColor="#f6f6f6"
+            android:drawablePadding="10dp"
+            android:imeOptions="actionNext"
+            android:inputType="phone" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:textColorHint="#F6F6F6">
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_password"
+            android:singleLine="true"
+            android:drawableTint="#f6f6f6"
+            android:hint="Password"
+            android:backgroundTint="#F6F6F6"
+            android:textColor="#f6f6f6"
+            android:drawablePadding="10dp"
+            android:inputType="textPassword" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/signup_btn"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button"
+        android:text="Sign up"
+        android:textColor="#fff"
+        android:textSize="18sp"
+        android:onClick="signUpUser"/>
+
+    <LinearLayout
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+        <TextView
+            style="@style/TextAppearance.AppCompat.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#f6f6f6"
+            android:text="Already have an account ?"/>
+        <TextView
+            android:id="@+id/signin_TV"
+            style="@style/TextAppearance.AppCompat.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sign in"
+            android:padding="10dp"
+            android:textAllCaps="true"
+            android:textColor="#F3BE1D" />
+    </LinearLayout>
+
+</LinearLayout>

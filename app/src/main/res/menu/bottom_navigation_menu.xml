@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/nav_trips"
+        android:icon="@drawable/ic_trips"
+        android:title="Trips"/>
+
+    <item android:id="@+id/nav_memories"
+        android:icon="@drawable/ic_memories"
+        android:title="Memories"/>
+
+    <item android:id="@+id/nav_wallet"
+        android:icon="@drawable/ic_wallet"
+        android:title="Wallet"/>
+</menu>
