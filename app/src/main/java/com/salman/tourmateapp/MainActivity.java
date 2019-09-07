@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -52,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
     static String startDate;
     static String endDate;
     DatePickerDialogFragment mDatePickerDialogFragment;
+    String mytripId;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
         editor.putString("userid", FirebaseAuth.getInstance().getCurrentUser().getUid());
         editor.apply();
+
         mDatePickerDialogFragment = new DatePickerDialogFragment();
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,12 +138,14 @@ public class MainActivity extends AppCompatActivity {
                 mDatePickerDialogFragment.show(getSupportFragmentManager(), "datePicker");
             }
         });
+
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
+
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -157,6 +163,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void saveTripInfo(String str_tripName, String str_tripDesc, String str_tripStartDate, String str_tripEndDate) {
+        progressDialog = new ProgressDialog(MainActivity.this);
+        progressDialog.setMessage("Please wait...");
+        progressDialog.show();
         databaseReference = FirebaseDatabase.getInstance().getReference("trips");
         String tripid = databaseReference.push().getKey();
         String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -166,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
+                    progressDialog.dismiss();
                     Toast.makeText(MainActivity.this, "Records added successfully !", Toast.LENGTH_SHORT).show();
                     tripName.setText("");
                     tripDescription.setText("");
@@ -176,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                progressDialog.dismiss();
                 Toast.makeText(MainActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -208,10 +219,8 @@ public class MainActivity extends AppCompatActivity {
     public static class DatePickerDialogFragment extends DialogFragment implements
             DatePickerDialog.OnDateSetListener {
 
-
         public static final int FLAG_START_DATE = 0;
         public static final int FLAG_END_DATE = 1;
-
         private int flag = 0;
 
         @Override
@@ -220,7 +229,6 @@ public class MainActivity extends AppCompatActivity {
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
-
 
             return new DatePickerDialog(getActivity(), this, year, month, day);
         }

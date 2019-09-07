@@ -1,14 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="20dp"
+    android:background="@color/app_background"
     tools:context=".fragment.MemoriesFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/add_memory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:textColor="#fff"
+        android:textAllCaps="true"
+        android:textStyle="bold"
+        android:padding="10dp"
+        android:textSize="18sp"
+        android:text="add"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#c0c0c0"
+        android:layout_below="@id/add_memory"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/memoriesRV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="memories" />
+        android:layout_marginTop="20dp"
+        tools:listitem="@layout/memory_recycler_item"
+        android:layout_below="@id/add_memory" />
 
-</FrameLayout>
+</RelativeLayout>
