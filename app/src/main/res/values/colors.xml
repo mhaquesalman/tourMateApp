@@ -9,4 +9,5 @@
     <color name="bottom_navigation_bg">#D1D1D1</color>
     <color name="heading_color">#009688</color>
     <color name="input_text_color">#f6f6f6</color>
+    <color name="yellow">#F5C51E</color>
 </resources>

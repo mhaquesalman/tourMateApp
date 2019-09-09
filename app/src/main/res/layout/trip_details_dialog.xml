@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="15dp"
+    android:gravity="center"
+    android:background="@color/app_background">
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/viewTrip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="trip details"
+        android:textColor="#f6f6f6"
+        android:textAllCaps="true"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold"
+        style="@style/TextAppearance.AppCompat.Large"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:layout_below="@id/viewTrip">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Trip Name"
+            android:textColor="@color/input_text_color"
+            android:textAllCaps="true"
+            android:textAlignment="center"
+            android:background="@color/heading_color"
+            style="@style/TextAppearance.AppCompat.Medium"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tripNameTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sajek"
+            android:textColor="@color/input_text_color"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"
+            android:padding="5dp">
+        </androidx.appcompat.widget.AppCompatTextView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Trip description"
+            android:textColor="@color/input_text_color"
+            android:textAllCaps="true"
+            android:layout_marginTop="10dp"
+            android:background="@color/heading_color"
+            android:textAlignment="center"
+            style="@style/TextAppearance.AppCompat.Medium"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tripDescTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sajek is beautiful place to visit.."
+            android:maxLines="4"
+            android:textColor="@color/input_text_color"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"
+            android:padding="5dp">
+        </androidx.appcompat.widget.AppCompatTextView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Trip start date"
+            android:textColor="@color/input_text_color"
+            android:textAllCaps="true"
+            android:layout_marginTop="10dp"
+            android:background="@color/heading_color"
+            android:textAlignment="center"
+            style="@style/TextAppearance.AppCompat.Medium"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tripStartDateTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sep 09, 2019"
+            android:maxLines="4"
+            android:textColor="@color/input_text_color"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"
+            android:padding="5dp">
+        </androidx.appcompat.widget.AppCompatTextView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Trip end date"
+            android:textColor="@color/input_text_color"
+            android:textAllCaps="true"
+            android:layout_marginTop="10dp"
+            android:background="@color/heading_color"
+            android:textAlignment="center"
+            style="@style/TextAppearance.AppCompat.Medium"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tripEndDateTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sep 19, 2019"
+            android:maxLines="4"
+            android:textColor="@color/input_text_color"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"
+            android:padding="5dp">
+        </androidx.appcompat.widget.AppCompatTextView>
+    </LinearLayout>
+</RelativeLayout>

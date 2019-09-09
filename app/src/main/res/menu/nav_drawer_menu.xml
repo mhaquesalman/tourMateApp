@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group>
+        <item
+            android:id="@+id/nav_home"
+            android:title="Home"
+            android:icon="@drawable/ic_home"
+            android:iconTint="#5E5D5D"/>
+        <item
+            android:id="@+id/nav_weather"
+            android:title="Weather"
+            android:icon="@drawable/ic_cloud"
+            android:iconTint="#5E5D5D"/>
+        <item
+            android:id="@+id/nav_nearby"
+            android:title="Nearby"
+            android:icon="@drawable/ic_trips"
+            android:iconTint="#5E5D5D"/>
+    </group>
+
+</menu>

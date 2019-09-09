@@ -23,35 +23,35 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.salman.tourmateapp.R;
+import com.salman.tourmateapp.model.Expense;
 import com.salman.tourmateapp.model.Memory;
 
 import java.util.List;
 
-public class MemoryListAdapter extends RecyclerView.Adapter<MemoryListAdapter.MyViewHolder> {
-    List<Memory> memoryList;
+public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.MyViewHolder> {
+    List<Expense> expenseList;
     Context mContext;
-    OnRowItemClickListener listener;
-    public MemoryListAdapter(List<Memory> memoryList, Context mContext, OnRowItemClickListener listener) {
-        this.memoryList = memoryList;
+    OnExpenseItemClickListner listner;
+    public ExpenseListAdapter(List<Expense> expenseList, Context mContext, OnExpenseItemClickListner listner) {
+        this.expenseList = expenseList;
         this.mContext = mContext;
-        this.listener = listener;
+        this.listner = listner;
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.memory_recycler_item, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.expense_recycler_item, parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
-        final Memory memory = memoryList.get(i);
-        Glide.with(mContext).load(memory.getMemoryimage()).apply(new RequestOptions().placeholder(R.drawable.image_placeholder))
-                .into(myViewHolder.memoryImage);
+        final Expense expense = expenseList.get(i);
 
-        myViewHolder.placeName.setText(memory.getTripLocatiion());
-        myViewHolder.memoryDesc.setText(memory.getMemoryDesc());
+        myViewHolder.placeName.setText(expense.getTripLocation());
+        myViewHolder.expenseDesc.setText(expense.getExpenseDesc());
+        myViewHolder.expenseBalance.setText(expense.getExpenseBal());
 
         myViewHolder.itemMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,12 +64,10 @@ public class MemoryListAdapter extends RecyclerView.Adapter<MemoryListAdapter.My
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()){
                             case R.id.item_edit:
-                                listener.onEditItemClicked(memory.getMemoryId());
-                                Log.d("onAdapter", "onMenuItemClick: "+listener.toString() + " " + memory.getMemoryId());
-                                //editMemory(memory.getMemoryId());
+                                listner.onClickItemEdit(expense.getExpenseId());
                                 break;
                             case R.id.item_delete:
-                                showConfirmationDialog(memory);
+                                showConfirmationDialog(expense);
                                 break;
                         }
                         return false;
@@ -81,23 +79,23 @@ public class MemoryListAdapter extends RecyclerView.Adapter<MemoryListAdapter.My
 
     @Override
     public int getItemCount() {
-        return memoryList.size();
+        return expenseList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        ImageView memoryImage,itemMenu;
-        TextView placeName, memoryDesc;
+        TextView placeName, expenseDesc, expenseBalance;
+        ImageView itemMenu;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-             memoryImage = itemView.findViewById(R.id.memoryImage);
-             placeName = itemView.findViewById(R.id.placeName);
-             memoryDesc = itemView.findViewById(R.id.memoryDesc);
-             itemMenu = itemView.findViewById(R.id.item_menu);
+            placeName = itemView.findViewById(R.id.placeName);
+            expenseDesc = itemView.findViewById(R.id.expenseDesc);
+            expenseBalance = itemView.findViewById(R.id.expenseBalance);
+            itemMenu = itemView.findViewById(R.id.item_menu);
         }
     }
 
 
-    private void showConfirmationDialog(final Memory memory) {
+    private void showConfirmationDialog(final Expense expense) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle("Delete Item");
         //builder.setIcon(R.drawable.ic_delete_red_24dp);
@@ -105,7 +103,7 @@ public class MemoryListAdapter extends RecyclerView.Adapter<MemoryListAdapter.My
         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                deleteMemory(memory);
+                deleteExpense(expense);
             }
         });
         builder.setNegativeButton("Cancel", null);
@@ -113,14 +111,14 @@ public class MemoryListAdapter extends RecyclerView.Adapter<MemoryListAdapter.My
         dialog.show();
     }
 
-    public void deleteMemory(final Memory memory){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("memories").child(memory.getMemoryId());
+    public void deleteExpense(final Expense expense){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("expenses").child(expense.getExpenseId());
         reference.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     Toast.makeText(mContext, "Records deleted successfully !", Toast.LENGTH_SHORT).show();
-                    memoryList.remove(memory);
+                    expenseList.remove(expense);
                     notifyDataSetChanged();
                 }
             }
@@ -128,10 +126,7 @@ public class MemoryListAdapter extends RecyclerView.Adapter<MemoryListAdapter.My
 
     }
 
-    public void editMemory(String memoryId) {
-
-    }
-    public interface OnRowItemClickListener {
-        void onEditItemClicked(String id);
+    public interface OnExpenseItemClickListner {
+        void onClickItemEdit(String id);
     }
 }

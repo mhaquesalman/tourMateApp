@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +29,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,24 +43,24 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.salman.tourmateapp.MainActivity;
 import com.salman.tourmateapp.R;
-import com.salman.tourmateapp.activity.SignupActivity;
 import com.salman.tourmateapp.adapter.MemoryListAdapter;
-import com.salman.tourmateapp.adapter.TripListAdapter;
 import com.salman.tourmateapp.model.Memory;
 import com.salman.tourmateapp.model.Trip;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MemoriesFragment extends Fragment {
+public class MemoriesFragment extends Fragment implements MemoryListAdapter.OnRowItemClickListener {
+    private static final String TAG = "MemoriesFragment";
     TextView add_memory;
     Button addImageBtn, saveBtn, cancelBtn;
     EditText memoryDesc;
@@ -94,7 +95,7 @@ public class MemoriesFragment extends Fragment {
         memoryRecyclerView.setHasFixedSize(true);
 
         memoryList = new ArrayList<>();
-        memoryListAdapter = new MemoryListAdapter(memoryList, getContext());
+        memoryListAdapter = new MemoryListAdapter(memoryList, getContext(),this);
         memoryRecyclerView.setAdapter(memoryListAdapter);
 
         add_memory = view.findViewById(R.id.add_memory);
@@ -105,12 +106,13 @@ public class MemoriesFragment extends Fragment {
             }
         });
 
-        myMemories();
+        getMemories();
+        Log.d(TAG, "onCreateView: Uri-> " + uri);
         return view;
     }
 
 
-    public void myMemories(){
+    public void getMemories(){
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Loading...");
         progressDialog.show();
@@ -186,7 +188,6 @@ public class MemoriesFragment extends Fragment {
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 
@@ -270,6 +271,7 @@ public class MemoriesFragment extends Fragment {
             uri = data.getData();
             Toast.makeText(getActivity(), "image added", Toast.LENGTH_SHORT).show();
             memoryImage.setImageURI(uri);
+            Log.d(TAG, "onActivityResult: Uri-> " + uri);
         }
     }
 
@@ -279,4 +281,154 @@ public class MemoriesFragment extends Fragment {
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
+    @Override
+    public void onEditItemClicked(String id) {
+        Log.d("memoryFragment", "onEditItemClicked: ");
+        getMemoryData(id);
+    }
+
+    public void getMemoryData(final String id){
+        final Dialog dialog = new Dialog(getActivity(), R.style.Theme_Dialog);
+        View view = getLayoutInflater().inflate(R.layout.memories_dialog_layout,null);
+        dialog.setContentView(view);
+        dialog.setCancelable(false);
+
+        addImageBtn = dialog.findViewById(R.id.addImage_btn);
+        saveBtn = dialog.findViewById(R.id.save_btn);
+        cancelBtn = dialog.findViewById(R.id.cancel_btn);
+        memoryImage = dialog.findViewById(R.id.memory_image);
+        memoryDesc = dialog.findViewById(R.id.memory_desc);
+        spinner = dialog.findViewById(R.id.spinner);
+        memoryImage = dialog.findViewById(R.id.memory_image);
+
+        arrayList = new ArrayList<>();
+        arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.color_spinner_layout, arrayList);
+        spinner.setAdapter(arrayAdapter);
+        getTripData();
+
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                tripLocation = parent.getItemAtPosition(position).toString();
+                ((TextView) parent.getChildAt(0)).setTextColor(getResources().getColor(R.color.yellow));
+                Toast.makeText(parent.getContext(), "Selected: " + tripLocation, Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        addImageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent, 1);
+            }
+        });
+
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String str_memoryDesc = memoryDesc.getText().toString();
+                updateMemory(str_memoryDesc, id);
+            }
+        });
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("memories").child(id);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Memory memory = dataSnapshot.getValue(Memory.class);
+                memoryDesc.setText(memory.getMemoryDesc());
+                arrayList.add(0, memory.getTripLocatiion());
+                spinner.setSelection(0);
+                Glide.with(getActivity()).load(memory.getMemoryimage()).into(memoryImage);
+                Log.d(TAG, "getMemory: Uri-> " + uri);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        dialog.show();
+    }
+
+
+    public void updateMemory(final String str_memoryDesc, final String id) {
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Please wait...");
+        progressDialog.show();
+        final StorageReference imageStorage = FirebaseStorage.getInstance().getReference()
+                .child("trip-images").child(System.currentTimeMillis()+"."+getFileExtension(uri));
+        if (uri != null) {
+            imageStorage.putFile(uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        imageStorage.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                String imageUrl = uri.toString();
+                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("memories");
+                                //String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                Memory memory = new Memory(id, imageUrl, str_memoryDesc, tripLocation, userid);
+                                reference.child(id).setValue(memory)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    progressDialog.dismiss();
+                                                    Toast.makeText(getActivity(), "Records updated successfully !", Toast.LENGTH_SHORT).show();
+                                                    memoryDesc.setText("");
+                                                    memoryImage.setImageResource(R.drawable.image_placeholder);
+                                                }
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        progressDialog.dismiss();
+                                        Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                            }
+                        });
+                    }
+                }
+            });
+        } else {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("memories").child(id);
+            //String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            Map<String,Object> tripData = new HashMap<>();
+            tripData.put("memoryDesc", str_memoryDesc);
+            tripData.put("tripLocation",tripLocation);
+            reference.updateChildren(tripData)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                progressDialog.dismiss();
+                                Toast.makeText(getActivity(), "Records updated successfully !", Toast.LENGTH_SHORT).show();
+                                memoryDesc.setText("");
+                                memoryImage.setImageResource(R.drawable.image_placeholder);
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    progressDialog.dismiss();
+                    Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
 }

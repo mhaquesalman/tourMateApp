@@ -7,14 +7,6 @@
     android:layout_marginBottom="25dp"
     android:background="@drawable/rounded_item">
 
-    <ImageView
-        android:id="@+id/memoryImage"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:src="@drawable/image_placeholder"
-        android:scaleType="centerCrop"
-        android:adjustViewBounds="true"/>
-
     <TextView
         android:id="@+id/placeName"
         android:layout_width="wrap_content"
@@ -25,15 +17,24 @@
         android:layout_marginTop="10dp"
         android:textStyle="bold"/>
 
-
     <TextView
-        android:id="@+id/memoryDesc"
+        android:id="@+id/expenseDesc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:textColor="#7259AC"
         android:layout_marginTop="5dp"
         android:text="enjoying the touch very much"/>
+
+    <TextView
+        android:id="@+id/expenseBalance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5000"
+        android:textColor="#673AB7"
+        android:textSize="22sp"
+        android:layout_marginTop="10dp"
+        android:textStyle="bold"/>
 
     <ImageView
         android:id="@+id/item_menu"

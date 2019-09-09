@@ -1,7 +1,11 @@
 package com.salman.tourmateapp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
@@ -11,27 +15,37 @@ import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.salman.tourmateapp.fragment.ExpensesFragment;
 import com.salman.tourmateapp.fragment.MemoriesFragment;
 import com.salman.tourmateapp.fragment.TripsFragment;
 import com.salman.tourmateapp.model.Trip;
+import com.salman.tourmateapp.model.User;
 import com.salman.tourmateapp.util.DatePickerFragment;
 import com.salman.tourmateapp.util.DatePickerFragmentTwo;
 
@@ -39,12 +53,16 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MainActivity extends AppCompatActivity {
+    DrawerLayout drawer;
+    Toolbar toolbar;
+    NavigationView navigationView;
     EditText tripName;
     EditText tripDescription;
     static EditText tripStartDate;
     static EditText tripEndDate;
-    TextInputLayout startDateTime, endDateTime;
     Button saveBtn, cancelBtn;
     FloatingActionButton fab;
     BottomNavigationView bottomNavigation;
@@ -53,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
     static String startDate;
     static String endDate;
     DatePickerDialogFragment mDatePickerDialogFragment;
-    String mytripId;
     ProgressDialog progressDialog;
 
     @Override
@@ -62,11 +79,25 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // initializing views
         init();
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //toolbar.setTitle(getResources().getString(R.string.toolbar_header));
+
+        drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.input_text_color));
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TripsFragment()).commit();
 
         SharedPreferences.Editor editor = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
         editor.putString("userid", FirebaseAuth.getInstance().getCurrentUser().getUid());
         editor.apply();
+
+        userInfo();
 
         mDatePickerDialogFragment = new DatePickerDialogFragment();
         fab.setOnClickListener(new View.OnClickListener() {
@@ -74,6 +105,27 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //TODO: create dialog
                 openDialog();
+            }
+        });
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.nav_weather:
+                        //todo
+                        break;
+                    case R.id.nav_nearby:
+                        //todo
+                        Toast.makeText(MainActivity.this, "Nearby", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.nav_home:
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container, new TripsFragment()).commit();
+                        break;
+                }
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
             }
         });
 
@@ -91,8 +143,8 @@ public class MainActivity extends AppCompatActivity {
                         fragment = new ExpensesFragment();
                         break;
                 }
-                if (fragment != null ){
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).commit();
+                if (fragment != null) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
                 }
                 return true;
             }
@@ -107,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void openDialog() {
         final Dialog dialog = new Dialog(this, R.style.Theme_Dialog);
-        View view = getLayoutInflater().inflate(R.layout.trips_dialog_layout,null);
+        View view = getLayoutInflater().inflate(R.layout.trips_dialog_layout, null);
         dialog.setContentView(view);
         dialog.setCancelable(false);
         tripName = dialog.findViewById(R.id.trip_name);
@@ -132,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //DialogFragment datePicker2 = new DatePickerFragmentTwo();
-               // datePicker2.show(getSupportFragmentManager(), "date picker");
+                // datePicker2.show(getSupportFragmentManager(), "date picker");
 
                 mDatePickerDialogFragment.setFlag(DatePickerDialogFragment.FLAG_END_DATE);
                 mDatePickerDialogFragment.show(getSupportFragmentManager(), "datePicker");
@@ -172,26 +224,24 @@ public class MainActivity extends AppCompatActivity {
         final Trip trip = new Trip(tripid, str_tripName, str_tripDesc, str_tripStartDate, str_tripEndDate, userid);
         databaseReference.child(tripid).setValue(trip)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    progressDialog.dismiss();
-                    Toast.makeText(MainActivity.this, "Records added successfully !", Toast.LENGTH_SHORT).show();
-                    tripName.setText("");
-                    tripDescription.setText("");
-                    tripStartDate.setText("");
-                    tripEndDate.setText("");
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            progressDialog.dismiss();
+                            Toast.makeText(MainActivity.this, "Records added successfully !", Toast.LENGTH_SHORT).show();
+                            tripName.setText("");
+                            tripDescription.setText("");
+                            tripStartDate.setText("");
+                            tripEndDate.setText("");
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 progressDialog.dismiss();
-                Toast.makeText(MainActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 
 /*    @Override
@@ -237,7 +287,6 @@ public class MainActivity extends AppCompatActivity {
             flag = i;
         }
 
-
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
             Calendar c = Calendar.getInstance();
@@ -257,4 +306,39 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void userInfo() {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = firebaseUser.getUid();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users").child(userId);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+
+                navigationView = findViewById(R.id.nav_view);
+                View headerView = navigationView.getHeaderView(0);
+                CircleImageView imageView = headerView.findViewById(R.id.nav_header_userIV);
+                TextView nameTV = headerView.findViewById(R.id.nav_header_nameTV);
+                TextView emailTV = headerView.findViewById(R.id.nav_header_emailTV);
+                nameTV.setText(user.getFullname());
+                emailTV.setText(user.getEmail());
+                Glide.with(getApplicationContext()).load(user.getImageUrl()).apply(new RequestOptions().placeholder(R.drawable.image_placeholder))
+                        .into(imageView);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(MainActivity.this, ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 }
+
