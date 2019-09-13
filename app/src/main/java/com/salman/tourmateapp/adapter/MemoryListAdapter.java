@@ -79,24 +79,6 @@ public class MemoryListAdapter extends RecyclerView.Adapter<MemoryListAdapter.My
         });
     }
 
-    @Override
-    public int getItemCount() {
-        return memoryList.size();
-    }
-
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        ImageView memoryImage,itemMenu;
-        TextView placeName, memoryDesc;
-        public MyViewHolder(@NonNull View itemView) {
-            super(itemView);
-             memoryImage = itemView.findViewById(R.id.memoryImage);
-             placeName = itemView.findViewById(R.id.placeName);
-             memoryDesc = itemView.findViewById(R.id.memoryDesc);
-             itemMenu = itemView.findViewById(R.id.item_menu);
-        }
-    }
-
-
     private void showConfirmationDialog(final Memory memory) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle("Delete Item");
@@ -128,9 +110,24 @@ public class MemoryListAdapter extends RecyclerView.Adapter<MemoryListAdapter.My
 
     }
 
-    public void editMemory(String memoryId) {
-
+    @Override
+    public int getItemCount() {
+        return memoryList.size();
     }
+
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        ImageView memoryImage,itemMenu;
+        TextView placeName, memoryDesc;
+        public MyViewHolder(@NonNull View itemView) {
+            super(itemView);
+            memoryImage = itemView.findViewById(R.id.memoryImage);
+            placeName = itemView.findViewById(R.id.placeName);
+            memoryDesc = itemView.findViewById(R.id.memoryDesc);
+            itemMenu = itemView.findViewById(R.id.item_menu);
+        }
+    }
+
     public interface OnRowItemClickListener {
         void onEditItemClicked(String id);
     }

@@ -367,9 +367,9 @@ public class MemoriesFragment extends Fragment implements MemoryListAdapter.OnRo
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Please wait...");
         progressDialog.show();
-        final StorageReference imageStorage = FirebaseStorage.getInstance().getReference()
-                .child("trip-images").child(System.currentTimeMillis()+"."+getFileExtension(uri));
         if (uri != null) {
+            final StorageReference imageStorage = FirebaseStorage.getInstance().getReference()
+                    .child("trip-images").child(System.currentTimeMillis()+"."+getFileExtension(uri));
             imageStorage.putFile(uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
@@ -408,10 +408,10 @@ public class MemoriesFragment extends Fragment implements MemoryListAdapter.OnRo
         } else {
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("memories").child(id);
             //String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            Map<String,Object> tripData = new HashMap<>();
-            tripData.put("memoryDesc", str_memoryDesc);
-            tripData.put("tripLocation",tripLocation);
-            reference.updateChildren(tripData)
+            Map<String,Object> hashmap = new HashMap<>();
+            hashmap.put("memoryDesc", str_memoryDesc);
+            hashmap.put("tripLocation",tripLocation);
+            reference.updateChildren(hashmap)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {

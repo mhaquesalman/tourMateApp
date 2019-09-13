@@ -1,14 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/app_background"
+    android:padding="20dp"
     tools:context=".fragment.WeatherFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imageView"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:src="@mipmap/ic_launcher"/>
 
-</FrameLayout>
+<LinearLayout
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginTop="10dp"
+    android:layout_below="@id/imageView">
+    <TextView
+        android:id="@+id/windTV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="#EFEFEF"
+        android:layout_weight="1"
+        android:gravity="left"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:text="Wind: 2.6 km/h"/>
+
+    <TextView
+        android:id="@+id/tempTV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="#EFEFEF"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:text="Temp: 18 °C"/>
+
+    <TextView
+        android:id="@+id/humidityTV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="#EFEFEF"
+        android:layout_weight="1"
+        android:gravity="right"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:text="Humidity: 88 %"/>
+</LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/weatherRV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linearLayout"
+        tools:listitem="@layout/weather_recycler_item"
+        android:layout_marginTop="20dp"/>
+
+</RelativeLayout>

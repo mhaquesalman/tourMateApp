@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.VerifyPhoneActivity"
+    android:padding="20dp"
+    android:gravity="center"
+    android:background="@color/app_background">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Phone Authentication"
+        android:textSize="28sp"
+        android:textColor="#fff"
+        android:layout_above="@id/progressbar"
+        android:layout_marginBottom="40dp"
+        android:gravity="center"/>
+
+    <ProgressBar
+        android:id="@+id/progressbar"
+        android:layout_above="@id/codeET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:visibility="invisible"/>
+
+    <EditText
+        android:id="@+id/codeET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#EFEFEF"
+        android:hint="Enter code..."
+        android:textColorHint="#EFEFEF"
+        android:textColor="#EFEFEF"/>
+
+    <Button
+        android:id="@+id/signinBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/codeET"
+        android:background="@drawable/button"
+        android:text="Sign in"
+        android:textAllCaps="true"
+        android:textColor="#fff"
+        android:textSize="16sp"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/sendCodeTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="send code"
+        android:textSize="18sp"
+        android:textColor="#fff"
+        android:padding="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_below="@id/signinBtn"
+        android:gravity="center"/>
+
+   <TextView
+        android:id="@+id/resendCodeTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Rsend code"
+        android:textSize="18sp"
+        android:textColor="#FFC107"
+        android:padding="10dp"
+        android:layout_marginTop="1dp"
+        android:layout_below="@id/sendCodeTV"
+        android:gravity="center"/>
+
+</RelativeLayout>

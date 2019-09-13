@@ -1,21 +1,17 @@
 package com.salman.tourmateapp.activity;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 import android.webkit.MimeTypeMap;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,7 +34,6 @@ import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
-import com.salman.tourmateapp.MainActivity;
 import com.salman.tourmateapp.R;
 import com.salman.tourmateapp.model.User;
 
@@ -57,6 +52,15 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         init();
+
+        signinTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SignupActivity.this, SigninActivity.class);
+                //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
 
     }
 
@@ -84,9 +88,14 @@ public class SignupActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(str_fullname) || TextUtils.isEmpty(str_email) || TextUtils.isEmpty(str_phone) || TextUtils.isEmpty(str_password)) {
             Toast.makeText(SignupActivity.this, "Empty field found", Toast.LENGTH_SHORT).show();
-            progressDialog.dismiss();
         } else if (str_password.length() < 6){
             password.setError("at least 6 characters required");
+            password.requestFocus();
+        } else if (str_phone.length() <= 10){
+            phone.setError("Enter a valid number");
+            phone.requestFocus();
+        } else if (uri == null) {
+            Toast.makeText(this, "please added image", Toast.LENGTH_SHORT).show();
         } else {
             userRegister(str_fullname, str_email, str_phone, str_password);
         }
@@ -120,6 +129,8 @@ public class SignupActivity extends AppCompatActivity {
                                                     progressDialog.dismiss();
                                                     Toast.makeText(SignupActivity.this, "Sign up complete", Toast.LENGTH_SHORT).show();
                                                     Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+                                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                    //intent.putExtra("mobile", str_phone);
                                                     startActivity(intent);
                                                 } else {
                                                     progressDialog.dismiss();

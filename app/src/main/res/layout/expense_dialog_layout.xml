@@ -9,7 +9,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
-        android:gravity="center"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:background="@color/app_background">

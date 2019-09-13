@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="65dp"
+    android:padding="5dp"
+    android:layout_marginBottom="4dp"
+    android:background="#FFC107">
+
+    <ImageView
+        android:id="@+id/rowimageView"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@mipmap/ic_launcher"/>
+
+    <TextView
+        android:id="@+id/rowDateTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2018-12-08 21:00:00"
+        android:layout_marginLeft="8dp"
+        android:textColor="#333"
+        android:layout_toRightOf="@id/rowimageView"/>
+
+    <TextView
+        android:id="@+id/mainTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="light rain"
+        android:textColor="#fff"
+        android:layout_below="@id/rowDateTV"
+        android:layout_toRightOf="@id/rowimageView"
+        android:layout_marginLeft="8dp"/>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:orientation="horizontal"
+        android:layout_below="@id/mainTV"
+        android:layout_marginLeft="8dp"
+        android:layout_toRightOf="@id/rowimageView">
+        <TextView
+            android:id="@+id/windTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="#333"
+            android:layout_weight="1"
+            android:text="Wind:2.6 km/h"/>
+
+        <TextView
+            android:id="@+id/tempTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="#333"
+            android:layout_weight="1"
+            android:text="Temp: 18 °C"/>
+
+        <TextView
+            android:id="@+id/humidityTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="#333"
+            android:layout_weight="1"
+            android:text="Humidity: 88 %"/>
+    </LinearLayout>
+
+</RelativeLayout>

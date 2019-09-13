@@ -1,114 +1,118 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/app_background"
+    android:gravity="center">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:orientation="vertical"
-android:padding="16dp"
-android:gravity="center"
-android:focusable="true"
-android:focusableInTouchMode="true"
-android:background="@color/app_background">
-
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Add memoris"
-    android:textColor="#f6f6f6"
-    android:textAllCaps="true"
-    android:layout_gravity="center_horizontal"
-    android:textStyle="bold"
-    style="@style/TextAppearance.AppCompat.Large"/>
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="5dp"
-    android:orientation="vertical">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#009688"
-        android:text="Select Trip:"
-        android:textColor="#fff"
-        android:textSize="16sp"/>
-
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/mySpinnerItemStyle"
-        android:backgroundTint="#fff"
-        android:popupBackground="#424242"
-        android:layout_marginTop="5dp"/>
-
-    <ImageView
-        android:id="@+id/memory_image"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:src="@drawable/image_placeholder"
-        android:scaleType="centerCrop"
-        android:layout_marginTop="20dp"
-        android:adjustViewBounds="true"/>
-
-    <Button
-        android:id="@+id/addImage_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#009688"
-        android:text="Add image"
-        android:layout_marginTop="10dp"
-        android:textColor="#fff" />
-
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColorHint="#F6F6F6">
-        <EditText
-            android:id="@+id/memory_desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:hint="add description..."
-            android:maxLines="4"
-            android:backgroundTint="#F6F6F6"
-            android:textColor="@color/input_text_color"
-            android:drawableLeft="@drawable/ic_note_light"
-            android:drawablePadding="10dp"
-            android:inputType="textCapSentences|textMultiLine"
-            android:imeOptions="actionNext"
-            android:maxLength="2000" />
-    </com.google.android.material.textfield.TextInputLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/save_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="#ECB714"
-            android:text="save"
-            android:layout_weight="1"
-            android:layout_margin="3dp"
-            android:textColor="#fff" />
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:background="@color/app_background">
 
-        <Button
-            android:id="@+id/cancel_btn"
-            android:layout_width="0dp"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#D11150"
-            android:text="cancel"
-            android:layout_weight="1"
-            android:layout_margin="3dp"
-            android:textColor="#fff"/>
+            android:text="Add memoris"
+            android:textColor="#f6f6f6"
+            android:textAllCaps="true"
+            android:layout_gravity="center_horizontal"
+            android:textStyle="bold"
+            style="@style/TextAppearance.AppCompat.Large" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#009688"
+                android:text="Select Trip:"
+                android:textColor="#fff"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/mySpinnerItemStyle"
+                android:backgroundTint="#fff"
+                android:popupBackground="#424242"
+                android:layout_marginTop="5dp" />
+
+            <ImageView
+                android:id="@+id/memory_image"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:src="@drawable/image_placeholder"
+                android:scaleType="centerCrop"
+                android:layout_marginTop="20dp"
+                android:adjustViewBounds="true" />
+
+            <Button
+                android:id="@+id/addImage_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#009688"
+                android:text="Add image"
+                android:layout_marginTop="10dp"
+                android:textColor="#fff" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="#F6F6F6">
+
+                <EditText
+                    android:id="@+id/memory_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:hint="add description..."
+                    android:maxLines="4"
+                    android:backgroundTint="#F6F6F6"
+                    android:textColor="@color/input_text_color"
+                    android:drawableLeft="@drawable/ic_note_light"
+                    android:drawablePadding="10dp"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:imeOptions="actionNext"
+                    android:maxLength="2000" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/save_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="#ECB714"
+                    android:text="save"
+                    android:layout_weight="1"
+                    android:layout_margin="3dp"
+                    android:textColor="#fff" />
+
+                <Button
+                    android:id="@+id/cancel_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="#D11150"
+                    android:text="cancel"
+                    android:layout_weight="1"
+                    android:layout_margin="3dp"
+                    android:textColor="#fff" />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
-</LinearLayout>
 
 </RelativeLayout>

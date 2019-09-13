@@ -7,4 +7,6 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="toolbar_header">TOUR MATE</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="api_key">AIzaSyDlmwY2xJ0-9EZpkctX_i5mofbUgTFH8Z0</string>
 </resources>

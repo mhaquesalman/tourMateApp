@@ -28,6 +28,7 @@
             android:backgroundTint="#F6F6F6"
             android:drawableTint="#f6f6f6"
             android:drawablePadding="10dp"
+            android:textColor="#F6F6F6"
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -47,6 +48,7 @@
             android:hint="Password"
             android:backgroundTint="#F6F6F6"
             android:drawablePadding="10dp"
+            android:textColor="#F6F6F6"
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 

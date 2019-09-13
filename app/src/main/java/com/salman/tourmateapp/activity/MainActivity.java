@@ -1,4 +1,4 @@
-package com.salman.tourmateapp;
+package com.salman.tourmateapp.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -12,13 +12,13 @@ import androidx.fragment.app.Fragment;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -33,7 +33,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -41,15 +40,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.salman.tourmateapp.R;
 import com.salman.tourmateapp.fragment.ExpensesFragment;
 import com.salman.tourmateapp.fragment.MemoriesFragment;
+import com.salman.tourmateapp.fragment.NearbyFragment;
 import com.salman.tourmateapp.fragment.TripsFragment;
+import com.salman.tourmateapp.fragment.WeatherFragment;
 import com.salman.tourmateapp.model.Trip;
 import com.salman.tourmateapp.model.User;
-import com.salman.tourmateapp.util.DatePickerFragment;
-import com.salman.tourmateapp.util.DatePickerFragmentTwo;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -59,8 +58,10 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawer;
     Toolbar toolbar;
     NavigationView navigationView;
+    ActionBarDrawerToggle toggle;
     EditText tripName;
     EditText tripDescription;
+    TextView logoutTV;
     static EditText tripStartDate;
     static EditText tripEndDate;
     Button saveBtn, cancelBtn;
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     static String endDate;
     DatePickerDialogFragment mDatePickerDialogFragment;
     ProgressDialog progressDialog;
-
+    Handler mhandler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,22 +83,24 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         //toolbar.setTitle(getResources().getString(R.string.toolbar_header));
 
         drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+        toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.input_text_color));
         drawer.addDrawerListener(toggle);
+        toggle.setDrawerIndicatorEnabled(true);
         toggle.syncState();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TripsFragment()).commit();
+        navigationView.setCheckedItem(R.id.nav_home);
 
         SharedPreferences.Editor editor = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
         editor.putString("userid", FirebaseAuth.getInstance().getCurrentUser().getUid());
         editor.apply();
 
-        userInfo();
 
         mDatePickerDialogFragment = new DatePickerDialogFragment();
         fab.setOnClickListener(new View.OnClickListener() {
@@ -108,16 +111,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        logoutTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(MainActivity.this, SigninActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+            }
+        });
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.nav_weather:
-                        //todo
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container, WeatherFragment.getInstance()).commit();
                         break;
                     case R.id.nav_nearby:
-                        //todo
-                        Toast.makeText(MainActivity.this, "Nearby", Toast.LENGTH_SHORT).show();
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container, new NearbyFragment()).commit();
                         break;
                     case R.id.nav_home:
                         getSupportFragmentManager().beginTransaction()
@@ -149,12 +164,23 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        /* mhandler = new Handler();
+        mhandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                userInfo();
+            }
+        }, 5000); */
+        userInfo();
     }
 
 
     public void init() {
         fab = findViewById(R.id.fab);
         bottomNavigation = findViewById(R.id.bottom_navigation);
+        navigationView = findViewById(R.id.nav_view);
+        logoutTV = findViewById(R.id.nav_logoutTV);
     }
 
     public void openDialog() {
@@ -183,9 +209,6 @@ public class MainActivity extends AppCompatActivity {
         tripEndDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //DialogFragment datePicker2 = new DatePickerFragmentTwo();
-                // datePicker2.show(getSupportFragmentManager(), "date picker");
-
                 mDatePickerDialogFragment.setFlag(DatePickerDialogFragment.FLAG_END_DATE);
                 mDatePickerDialogFragment.show(getSupportFragmentManager(), "datePicker");
             }
@@ -266,8 +289,7 @@ public class MainActivity extends AppCompatActivity {
     }*/
 
 
-    public static class DatePickerDialogFragment extends DialogFragment implements
-            DatePickerDialog.OnDateSetListener {
+    public static class DatePickerDialogFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
         public static final int FLAG_START_DATE = 0;
         public static final int FLAG_END_DATE = 1;
@@ -300,8 +322,6 @@ public class MainActivity extends AppCompatActivity {
             } else if (flag == FLAG_END_DATE) {
                 endDate = Dateformat.format(c.getTime());
                 tripEndDate.setText(endDate);
-
-
             }
         }
     }
@@ -315,7 +335,6 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
 
-                navigationView = findViewById(R.id.nav_view);
                 View headerView = navigationView.getHeaderView(0);
                 CircleImageView imageView = headerView.findViewById(R.id.nav_header_userIV);
                 TextView nameTV = headerView.findViewById(R.id.nav_header_nameTV);
@@ -340,5 +359,6 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+
 }
 
