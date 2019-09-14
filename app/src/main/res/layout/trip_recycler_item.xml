@@ -60,7 +60,7 @@
             android:layout_weight="1"
             android:textColor="#fff"
             android:textAlignment="center"
-            android:text="memories"/>
+            android:text="Edit"/>
 
         <TextView
             android:id="@+id/tripDeleteTV"

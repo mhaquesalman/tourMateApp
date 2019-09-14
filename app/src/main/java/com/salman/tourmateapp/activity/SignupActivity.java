@@ -47,6 +47,7 @@ public class SignupActivity extends AppCompatActivity {
     DatabaseReference databaseReference;
     private static final int IMAGE_REQUEST_CODE = 1;
     Uri uri;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,10 +89,10 @@ public class SignupActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(str_fullname) || TextUtils.isEmpty(str_email) || TextUtils.isEmpty(str_phone) || TextUtils.isEmpty(str_password)) {
             Toast.makeText(SignupActivity.this, "Empty field found", Toast.LENGTH_SHORT).show();
-        } else if (str_password.length() < 6){
+        } else if (str_password.length() < 6) {
             password.setError("at least 6 characters required");
             password.requestFocus();
-        } else if (str_phone.length() <= 10){
+        } else if (str_phone.length() <= 10) {
             phone.setError("Enter a valid number");
             phone.requestFocus();
         } else if (uri == null) {
@@ -104,7 +105,7 @@ public class SignupActivity extends AppCompatActivity {
 
     public void userRegister(final String str_fullname, final String str_email, final String str_phone, final String str_password) {
         progressDialog.show();
-        final StorageReference imageStorage = storageReference.child("profile-images").child(System.currentTimeMillis()+"."+getFileExtension(uri));
+        final StorageReference imageStorage = storageReference.child("profile-images").child(System.currentTimeMillis() + "." + getFileExtension(uri));
         if (uri != null) {
             imageStorage.putFile(uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -116,35 +117,35 @@ public class SignupActivity extends AppCompatActivity {
                                 final String imageUrl = uri.toString();
                                 mAuth.createUserWithEmailAndPassword(str_email, str_password)
                                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                        String userId = mAuth.getCurrentUser().getUid();
-                                        User user = new User(userId,str_fullname, str_email, str_phone, imageUrl);
+                                            @Override
+                                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                                String userId = mAuth.getCurrentUser().getUid();
+                                                User user = new User(userId, str_fullname, str_email, str_phone, imageUrl);
 
-                                        DatabaseReference userRef = databaseReference.child("users").child(userId);
-                                        userRef.setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    progressDialog.dismiss();
-                                                    Toast.makeText(SignupActivity.this, "Sign up complete", Toast.LENGTH_SHORT).show();
-                                                    Intent intent = new Intent(SignupActivity.this, MainActivity.class);
-                                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                    //intent.putExtra("mobile", str_phone);
-                                                    startActivity(intent);
-                                                } else {
-                                                    progressDialog.dismiss();
-                                                    Toast.makeText(SignupActivity.this, "something wrong", Toast.LENGTH_SHORT).show();
-                                                }
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Toast.makeText(SignupActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                DatabaseReference userRef = databaseReference.child("users").child(userId);
+                                                userRef.setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()) {
+                                                            progressDialog.dismiss();
+                                                            Toast.makeText(SignupActivity.this, "Sign up complete", Toast.LENGTH_SHORT).show();
+                                                            Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+                                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                            //intent.putExtra("mobile", str_phone);
+                                                            startActivity(intent);
+                                                        } else {
+                                                            progressDialog.dismiss();
+                                                            Toast.makeText(SignupActivity.this, "something wrong", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(SignupActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
                                             }
                                         });
-                                    }
-                                });
                             }
                         });
                     }
@@ -165,7 +166,6 @@ public class SignupActivity extends AppCompatActivity {
                     public void onPermissionDenied(PermissionDeniedResponse response) {
                         Toast.makeText(SignupActivity.this, "Permission is required", Toast.LENGTH_SHORT).show();
                     }
-
                     @Override
                     public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
                         token.continuePermissionRequest();
@@ -183,14 +183,14 @@ public class SignupActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-       if (requestCode == IMAGE_REQUEST_CODE && resultCode == RESULT_OK) {
-           uri = data.getData();
-           Toast.makeText(this, "image added", Toast.LENGTH_SHORT).show();
+        if (requestCode == IMAGE_REQUEST_CODE && resultCode == RESULT_OK) {
+            uri = data.getData();
+            Toast.makeText(this, "image added", Toast.LENGTH_SHORT).show();
 
-       }
+        }
     }
 
-    public String getFileExtension(Uri uri){
+    public String getFileExtension(Uri uri) {
         ContentResolver contentResolver = getContentResolver();
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
