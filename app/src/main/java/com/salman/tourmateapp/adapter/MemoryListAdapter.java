@@ -107,7 +107,6 @@ public class MemoryListAdapter extends RecyclerView.Adapter<MemoryListAdapter.My
                 }
             }
         });
-
     }
 
     @Override

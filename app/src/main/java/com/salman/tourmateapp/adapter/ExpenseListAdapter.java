@@ -77,24 +77,6 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.
         });
     }
 
-    @Override
-    public int getItemCount() {
-        return expenseList.size();
-    }
-
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView placeName, expenseDesc, expenseBalance;
-        ImageView itemMenu;
-        public MyViewHolder(@NonNull View itemView) {
-            super(itemView);
-            placeName = itemView.findViewById(R.id.placeName);
-            expenseDesc = itemView.findViewById(R.id.expenseDesc);
-            expenseBalance = itemView.findViewById(R.id.expenseBalance);
-            itemMenu = itemView.findViewById(R.id.item_menu);
-        }
-    }
-
-
     private void showConfirmationDialog(final Expense expense) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle("Delete Item");
@@ -123,7 +105,23 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.
                 }
             }
         });
+    }
 
+    @Override
+    public int getItemCount() {
+        return expenseList.size();
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView placeName, expenseDesc, expenseBalance;
+        ImageView itemMenu;
+        public MyViewHolder(@NonNull View itemView) {
+            super(itemView);
+            placeName = itemView.findViewById(R.id.placeName);
+            expenseDesc = itemView.findViewById(R.id.expenseDesc);
+            expenseBalance = itemView.findViewById(R.id.expenseBalance);
+            itemMenu = itemView.findViewById(R.id.item_menu);
+        }
     }
 
     public interface OnExpenseItemClickListner {

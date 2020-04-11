@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/app_background"
+    android:padding="22dp"
+    tools:context=".activity.SendActivity">
+
+    <TextView
+        android:id="@+id/user_id_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Salman"
+        android:textSize="25sp"
+        android:textColor="@color/input_text_color"
+        android:textAlignment="center"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="#F6F6F6">
+
+        <EditText
+            android:id="@+id/message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_note"
+            android:singleLine="true"
+            android:hint="Send message..."
+            android:backgroundTint="#F6F6F6"
+            android:drawableTint="#f6f6f6"
+            android:drawablePadding="10dp"
+            android:textColor="#F6F6F6"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/sendmsg_btn"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFC107"
+        android:text="Send"
+        android:textColor="#fff"
+        android:textSize="18sp" />
+
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:layout_marginTop="5dp">
+
+    <Button
+        android:id="@+id/checkmsg_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#009688"
+        android:text="See Notifications"
+        android:textColor="#fff"
+        android:textSize="18sp"
+        android:layout_gravity="bottom"/>
+
+</LinearLayout>
+
+</LinearLayout>

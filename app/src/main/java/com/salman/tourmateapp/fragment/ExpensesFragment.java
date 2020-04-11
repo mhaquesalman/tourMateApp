@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -49,7 +50,7 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class ExpensesFragment extends Fragment implements ExpenseListAdapter.OnExpenseItemClickListner {
-    TextView add_expense;
+    TextView add_expense, defaultTV;
     RecyclerView expenseRV;
     EditText expense_desc, expense_balance;
     Button saveBtn, cancelBtn;
@@ -59,7 +60,7 @@ public class ExpensesFragment extends Fragment implements ExpenseListAdapter.OnE
     String tripLocation;
     String userid;
     ProgressDialog progressDialog;
-    List<Expense> expenseList;
+    List<Expense> expenseList = new ArrayList<>();
     ExpenseListAdapter expenseListAdapter;
 
     public ExpensesFragment() {
@@ -79,10 +80,10 @@ public class ExpensesFragment extends Fragment implements ExpenseListAdapter.OnE
         expenseRV.setLayoutManager(layoutManager);
         expenseRV.setHasFixedSize(true);
 
-        expenseList = new ArrayList<>();
         expenseListAdapter = new ExpenseListAdapter(expenseList, getActivity(),this);
         expenseRV.setAdapter(expenseListAdapter);
 
+        defaultTV = view.findViewById(R.id.defaultTV);
         add_expense = view.findViewById(R.id.add_expense);
         add_expense.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,8 +104,10 @@ public class ExpensesFragment extends Fragment implements ExpenseListAdapter.OnE
                 arrayList.clear();
                 for (DataSnapshot item : dataSnapshot.getChildren()) {
                     Trip trip = item.getValue(Trip.class);
-                    String tripName = trip.getTripName();
-                    arrayList.add(tripName);
+                    if (trip.getUserId().equals(userid)) {
+                        String tripName = trip.getTripName();
+                        arrayList.add(tripName);
+                    }
                 }
                 arrayAdapter.notifyDataSetChanged();
             }
@@ -202,9 +205,12 @@ public class ExpensesFragment extends Fragment implements ExpenseListAdapter.OnE
                     if (expense.getUserId().equals(userid)) {
                         expenseList.add(expense);
                     }
-                    expenseListAdapter.notifyDataSetChanged();
-                    Collections.reverse(expenseList);
-                    progressDialog.dismiss();
+                }
+                progressDialog.dismiss();
+                Collections.reverse(expenseList);
+                expenseListAdapter.notifyDataSetChanged();
+                if (expenseList.isEmpty()) {
+                    defaultTV.setVisibility(View.VISIBLE);
                 }
             }
             @Override

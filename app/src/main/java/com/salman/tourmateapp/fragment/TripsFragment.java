@@ -143,15 +143,15 @@ public class TripsFragment extends Fragment implements TripListAdapter.OnTripIte
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Trip trip = snapshot.getValue(Trip.class);
                     if (trip.getUserId().equals(userid)) {
-                        progressDialog.dismiss();
                         tripList.add(trip);
-                        Log.d(TAG, "onDataChange: "+ tripList);
                     }
                 }
-                tripAdapter.notifyDataSetChanged();
-                Collections.reverse(tripList);
                 progressDialog.dismiss();
-
+                Collections.reverse(tripList);
+                tripAdapter.notifyDataSetChanged();
+                if (tripList.isEmpty()) {
+                    Toast.makeText(getActivity(), "no data found", Toast.LENGTH_SHORT).show();
+                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

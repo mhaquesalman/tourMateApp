@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/rounded_item"
+    android:layout_marginBottom="12dp">
+
+    <RelativeLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@mipmap/ic_launcher">
+        </de.hdodenhof.circleimageview.CircleImageView>
+        <TextView
+            android:id="@+id/nameTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="Salman"
+            android:textSize="22sp"
+            android:textColor="#673AB7"
+            android:textStyle="bold"
+           android:layout_toRightOf="@id/image"/>
+
+        <TextView
+            android:id="@+id/messageTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="Hey how are you ?"
+            android:textSize="20sp"
+            android:textColor="#7959B8"
+            android:textStyle="normal"
+            android:layout_below="@id/nameTV"
+            android:layout_toRightOf="@id/image"/>
+    </RelativeLayout>
+
+</LinearLayout>

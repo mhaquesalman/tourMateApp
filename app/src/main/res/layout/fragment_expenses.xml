@@ -25,6 +25,16 @@
         android:background="#c0c0c0"
         android:layout_below="@id/add_expense"/>
 
+    <TextView
+        android:id="@+id/defaultTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No data available"
+        android:layout_centerInParent="true"
+        android:textColor="#EFEFEF"
+        android:visibility="gone"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/expenseRV"
         android:layout_width="match_parent"

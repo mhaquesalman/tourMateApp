@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_background"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".activity.NotificationActivity">
+
+<TextView
+    android:id="@+id/notify_text"
+    android:gravity="center_horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Hey there !"
+    android:textColor="#FFF"
+    android:textSize="22sp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/notficationView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        tools:listitem="@layout/notification_recycler_item"/>
+
+</LinearLayout>

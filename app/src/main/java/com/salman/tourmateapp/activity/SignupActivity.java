@@ -100,7 +100,6 @@ public class SignupActivity extends AppCompatActivity {
         } else {
             userRegister(str_fullname, str_email, str_phone, str_password);
         }
-
     }
 
     public void userRegister(final String str_fullname, final String str_email, final String str_phone, final String str_password) {
@@ -141,6 +140,7 @@ public class SignupActivity extends AppCompatActivity {
                                                 }).addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
+                                                        progressDialog.dismiss();
                                                         Toast.makeText(SignupActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                                                     }
                                                 });

@@ -17,6 +17,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +30,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -45,16 +47,20 @@ import com.salman.tourmateapp.fragment.ExpensesFragment;
 import com.salman.tourmateapp.fragment.MemoriesFragment;
 import com.salman.tourmateapp.fragment.NearbyFragment;
 import com.salman.tourmateapp.fragment.TripsFragment;
+import com.salman.tourmateapp.fragment.UsersFragment;
 import com.salman.tourmateapp.fragment.WeatherFragment;
 import com.salman.tourmateapp.model.Trip;
 import com.salman.tourmateapp.model.User;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String TAG = "MainActivity";
     DrawerLayout drawer;
     Toolbar toolbar;
     NavigationView navigationView;
@@ -74,12 +80,15 @@ public class MainActivity extends AppCompatActivity {
     DatePickerDialogFragment mDatePickerDialogFragment;
     ProgressDialog progressDialog;
     Handler mhandler;
+    FirebaseUser firebaseUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // initializing views
         init();
+        Log.d(TAG, "Firebase User: OnCreate " + firebaseUser);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -114,11 +123,21 @@ public class MainActivity extends AppCompatActivity {
         logoutTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(MainActivity.this, SigninActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
+                Map<String, Object> removeTokenMap = new HashMap<>();
+                removeTokenMap.put("tokenId", "");
+                databaseReference = FirebaseDatabase.getInstance().getReference("users");
+                String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                databaseReference.child(userid).updateChildren(removeTokenMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        FirebaseAuth.getInstance().signOut();
+                        Intent intent = new Intent(MainActivity.this, SigninActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+
             }
         });
 
@@ -157,6 +176,9 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.nav_wallet:
                         fragment = new ExpensesFragment();
                         break;
+                    case R.id.nav_users:
+                        fragment = new UsersFragment();
+
                 }
                 if (fragment != null) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
@@ -181,6 +203,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigation = findViewById(R.id.bottom_navigation);
         navigationView = findViewById(R.id.nav_view);
         logoutTV = findViewById(R.id.nav_logoutTV);
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     public void openDialog() {

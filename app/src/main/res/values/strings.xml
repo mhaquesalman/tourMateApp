@@ -9,4 +9,5 @@
     <string name="toolbar_header">TOUR MATE</string>
     <string name="title_activity_maps">Map</string>
     <string name="api_key">AIzaSyDlmwY2xJ0-9EZpkctX_i5mofbUgTFH8Z0</string>
+    <string name="default_notification_channel_id">CHANNEL_01</string>
 </resources>

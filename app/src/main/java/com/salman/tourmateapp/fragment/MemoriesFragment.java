@@ -126,9 +126,12 @@ public class MemoriesFragment extends Fragment implements MemoryListAdapter.OnRo
                     if (memory.getUserId().equals(userid)) {
                         memoryList.add(memory);
                     }
-                    memoryListAdapter.notifyDataSetChanged();
-                    Collections.reverse(memoryList);
-                    progressDialog.dismiss();
+                }
+                progressDialog.dismiss();
+                Collections.reverse(memoryList);
+                memoryListAdapter.notifyDataSetChanged();
+                if (memoryList.isEmpty()) {
+                    Toast.makeText(getActivity(), "no data found", Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
@@ -137,7 +140,6 @@ public class MemoriesFragment extends Fragment implements MemoryListAdapter.OnRo
                 Toast.makeText(getContext(), ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     public void getTripData() {
@@ -148,8 +150,10 @@ public class MemoriesFragment extends Fragment implements MemoryListAdapter.OnRo
                 arrayList.clear();
                 for (DataSnapshot item : dataSnapshot.getChildren()) {
                      Trip trip = item.getValue(Trip.class);
-                     String tripName = trip.getTripName();
-                     arrayList.add(tripName);
+                     if (trip.getUserId().equals(userid)) {
+                         String tripName = trip.getTripName();
+                         arrayList.add(tripName);
+                     }
                 }
                 arrayAdapter.notifyDataSetChanged();
             }
