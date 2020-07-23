@@ -33,6 +33,7 @@
         <activity android:name=".activity.VerifyPhoneActivity" />
         <activity
             android:name=".map.MapsActivity"
+            android:parentActivityName=".activity.MainActivity"
             android:label="@string/title_activity_maps" />
         <activity
             android:name=".activity.SignupActivity"
@@ -46,10 +47,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activity.MainActivity"
-            android:label="@string/toolbar_header"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

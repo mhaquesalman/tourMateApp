@@ -314,5 +314,4 @@ public class ExpensesFragment extends Fragment implements ExpenseListAdapter.OnE
         });
     }
 
-
 }

@@ -2,6 +2,7 @@ package com.salman.tourmateapp.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -74,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton fab;
     BottomNavigationView bottomNavigation;
     Fragment fragment = null;
+    String fragmentTitle;
     DatabaseReference databaseReference;
     static String startDate;
     static String endDate;
@@ -81,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     Handler mhandler;
     FirebaseUser firebaseUser;
+    long backPressedTime;
+    Toast backToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // initializing views
         init();
-        Log.d(TAG, "Firebase User: OnCreate " + firebaseUser);
+        //Log.d(TAG, "Firebase User: OnCreate " + firebaseUser);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -103,7 +108,8 @@ public class MainActivity extends AppCompatActivity {
         toggle.setDrawerIndicatorEnabled(true);
         toggle.syncState();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TripsFragment()).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, new TripsFragment())
+                .commit();
         navigationView.setCheckedItem(R.id.nav_home);
 
         SharedPreferences.Editor editor = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
@@ -169,19 +175,27 @@ public class MainActivity extends AppCompatActivity {
                 switch (menuItem.getItemId()) {
                     case R.id.nav_trips:
                         fragment = new TripsFragment();
+                        fragmentTitle = "Trips";
                         break;
                     case R.id.nav_memories:
                         fragment = new MemoriesFragment();
+                        fragmentTitle = "Memories";
                         break;
                     case R.id.nav_wallet:
                         fragment = new ExpensesFragment();
+                        fragmentTitle = "Expenses";
                         break;
                     case R.id.nav_users:
                         fragment = new UsersFragment();
+                        fragmentTitle = "Users";
+                        break;
 
                 }
                 if (fragment != null) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment)
+                            .commit();
+                    toolbar.setTitle(fragmentTitle);
+
                 }
                 return true;
             }
@@ -195,6 +209,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }, 5000); */
         userInfo();
+
+        Log.d(TAG, "onCreate: Clicked");
     }
 
 
@@ -312,7 +328,8 @@ public class MainActivity extends AppCompatActivity {
     }*/
 
 
-    public static class DatePickerDialogFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+    public static class DatePickerDialogFragment extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
 
         public static final int FLAG_START_DATE = 0;
         public static final int FLAG_END_DATE = 1;
@@ -379,9 +396,73 @@ public class MainActivity extends AppCompatActivity {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            showExitDialog();
+            //Log.d(TAG, "onBackPressed: Clicked");
         }
     }
 
+    public void showExitDialog() {
+        AlertDialog.Builder builder =  new AlertDialog.Builder(this);
+        builder.setMessage("Want to exit from the app ?");
+        builder.setCancelable(true);
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                dialogInterface.cancel();
+            }
+        }).setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                Log.d(TAG, "onBackPressed: Clicked");
+                finish();
+
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart: Clicked");
+    }
+
+
+/*    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: Clicked");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: Clicked");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: Clicked");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy: Clicked");
+    }*/
 }
+
+/*         if (backPressedTime + 2000 > System.currentTimeMillis()) {
+                backToast.cancel();
+                super.onBackPressed();
+                return;
+            } else {
+                backToast = Toast.makeText(getBaseContext(), "Press back again to exit", Toast.LENGTH_SHORT);
+                backToast.show();
+            }
+            backPressedTime = System.currentTimeMillis();
+             */
+
 
